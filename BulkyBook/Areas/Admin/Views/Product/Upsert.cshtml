@@ -1,0 +1,169 @@
+﻿@model BulkyBook.Models.ViewModels.ProductVM
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var title = "Додати товар";
+}
+
+
+<form method="post" enctype="multipart/form-data">
+    <div class="row p-3 border">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @if (Model.Product.Id != 0)
+        {
+            //edit
+            title = "Редагувати товар";
+            <input type="hidden" asp-for="Product.Id" />
+        }
+        <div class="border-bottom center-block">
+            <h2 class="purple">@title</h2>
+        </div>
+        <div class="col-10 pt-4 center-block">
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Product.Title">Назва</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Product.Title" class="form-control" />
+                    <span asp-validation-for="Product.Title" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Product.Description">Опис</label>
+                </div>
+                <div class="col-8">
+                    <textarea asp-for="Product.Description" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Product.Consist">Склад</label>
+                </div>
+                <div class="col-8">
+                    <textarea asp-for="Product.Consist" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Product.CareConditions">Умови догляду</label>
+                </div>
+                <div class="col-8">
+                    <textarea asp-for="Product.CareConditions" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Product.Price">Ціна</label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Product.Price" class="form-control" />
+                    <span asp-validation-for="Product.Price" class="text-danger"></span>
+                </div>
+            </div>
+            @if (Model.Product.Id == 0)
+            {
+                <div class="form-group row">
+                    <div class="col-2">
+                        <label>Кількість кольорів</label>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-8">
+                        <input type="number" name="colorsQuantity" required />
+                    </div>
+                </div>
+            }
+            <div class="form-group row">
+                <div class="col-2">
+                    <label>Основна Категорія</label>
+                </div>
+                <div class="col-4">
+                    @Html.DropDownListFor(m => m.Product.CategoryId, Model.MainCategoryList, "Виберіть категорію",
+                   new { @class = "form-control" })
+                    <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-2">
+                    <label>Другорядна Категорія</label>
+                </div>
+                <div class="col-4">
+                    @Html.DropDownListFor(m => m.Product.CategoryId, Model.SubCategoryList, "Виберіть категорію",
+                   new { @class = "form-control" })
+                    <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-2">
+                    <label>Фотографії</label>
+                </div>
+                <div class="col-4">
+                    <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-8 offset-2">
+                    @if (Model.Product.Id != 0)
+                    {
+                        <partial name="_EditAndBackToListButton" model="Model.Product.Id" />
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col">
+                                <button type="submit" onclick="return validateInput()" class="btn btn-success form-control">Продовжити</button>
+                            </div>
+                            <div class="col">
+                                <a asp-action="Index" class="btn btn-danger form-control">Відміна</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        @if (Model.Product.Id != 0 && Model.Product.ImagesUrl != null)
+        {
+            @foreach (var url in Model.Product.ImagesUrl)
+            {
+                <div class="col-3 offset-1 pt-4">
+                    <img src="@url" width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
+                </div>
+            }
+        }
+        @*<div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Product.Price">Ціна</label>
+            </div>
+            <div class="col-8">
+                <input asp-for="DeletePics" class="form-control" />
+                <span asp-validation-for="Product.Price" class="text-danger"></span>
+            </div>
+        </div>
+        asp-route-id="@product.Id"*@
+    </div>
+</form>
+
+@section Scripts{ 
+<partial name="_ValidationScriptsPartial" />
+<script src="https://cdn.tiny.cloud/1/n94ifuzvl80pchikopiwgz2esrw8n28dwcywvpejlqrregfp/tinymce/5/tinymce.min.js"></script>
+
+<script>
+
+    tinymce.init({
+        selector: 'textarea',
+        plugins: 'lists',
+        menubar: 'file edit format'
+    });
+
+
+    function validateInput() {
+        if (document.getElementById("uploadBox").value == "") {
+            swal("Error", "Please select an image", "error");
+            return false;
+        }
+        return true;
+    };
+
+</script>
+
+}

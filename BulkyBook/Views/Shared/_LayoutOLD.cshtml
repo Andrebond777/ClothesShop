@@ -1,0 +1,260 @@
+﻿@using BulkyBook.Utility
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brand Y'fn</title>
+    <meta name="description" content="Інтернет-магазин Brand_Y'fn пропонує чоловічий, жіночий та дитячий одяг. Brand_Y'fn для тих, хто шукає зручний комфортний, якісний та оригінальний одяг для себе чи для інших членів своєї сім'ї. Ми пропонуємо цікаві поєднання в одному стилі для всієї сім' ї!">
+    <meta name="author" content="andrebond777">
+    @*<title>@ViewData["Title"] - ClothesShop</title>*@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />*@
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/css/prettyPhoto.css" rel="stylesheet">
+    <link href="~/css/price-range.css" rel="stylesheet">
+    <link href="~/css/animate.css" rel="stylesheet">
+    <link href="~/css/main.css" rel="stylesheet">
+    <link href="~/css/responsive.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="~/images/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="~/images/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/images/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/images/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="~/images/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <link href="./css/fotorama.css" rel="stylesheet">
+</head><!--/head-->
+
+<body>
+    <header id="header">
+        <!--header-->
+        <div class="header_top">
+            <!--header_top-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="contactinfo social-icons">
+                            <ul class="nav nav-pills">
+                                <li><a href="tel:+380976443016"><i class="fa fa-phone"></i> +38 097 644 30 16</a></li>
+                                <li><a href="tel:+380634370449"><i class="fa fa-phone"></i> +38 063 437 04 49</a></li>
+                                <li><a href="https://instagram.com/brand_yfn?igshid=vo3c7uzv2uze" target="_blank"><i class="fa fa-instagram"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="contactinfo social-icons pull-right">
+                            <ul class="nav nav-pills">
+                                <li><a href="https://goo.gl/maps/TqMvW5ubCA2PJgZs7" target="_blank"><i class="fa fa-map-marker"></i> Ірпінь, вул. Українська, 48а</a></li>
+                                <li><a href="mailto: Brand.yfn.shop@gmail.com" target="_blank"><i class="fa fa-envelope"></i> Brand.yfn.shop@gmail.com</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--/header_top-->
+
+        <div class="header-middle">
+            <!--header-middle-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="logo pull-left">
+                            <a asp-area="Customer" asp-controller="Home" asp-action="Index"><img src="~/images/home/logo.png" alt="logo" height="60" /></a>
+                        </div>
+                        <div class="btn-group pull-right">
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="shop-menu pull-right">
+                            <ul class="nav">
+                                @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.ssShoppingCart) != null)
+                                {
+                                    <li style="color:white;">
+                                        <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link">
+                                            @{
+                                                var count = HttpContextAccessor.HttpContext.Session.GetInt32(SD.ssShoppingCart);
+                                            }
+                                            <i class="fas fa-shopping-cart"></i> &nbsp;Кошик покупок (@count)
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li style="color:white;">
+                                        <a href="#" class="nav-link">
+                                            <i class="fas fa-shopping-cart"></i> &nbsp;Кошик покупок (0)
+                                        </a>
+                                    </li>
+                                }
+                                <li>
+                                    <a class="nav-link" asp-area="Admin" asp-controller="Order" asp-action="Index">
+                                        @if (User.IsInRole(SD.Role_Employee) || User.IsInRole(SD.Role_Admin))
+                                        {
+                                            <span>Керувати замовленнями</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Історія замовлень</span>
+                                        }
+                                    </a>
+                                </li>
+                                <li><partial name="_LoginPartial" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--/header-middle-->
+
+        <div class="header-bottom">
+            <!--header-bottom-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+                        <div class="mainmenu pull-left">
+                            <ul class="nav navbar-nav collapse navbar-collapse">
+
+                                <li><a class="" asp-area="Customer" asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i></a></li>
+                                <li><a asp-action="Index" asp-route-categoryName="Жінки">Жінки</a></li>
+                                <li><a asp-action="Index" asp-route-categoryName="Чоловіки">Чоловіки</a></li>
+                                <li><a asp-action="Index" asp-route-categoryName="Діти">Діти</a></li>
+                                @if (User.IsInRole(SD.Role_Admin))
+                                {
+                                    <li class="dropdown">
+                                        <a href="#">Налаштування<i class="fa fa-angle-down"></i></a>
+                                        <ul role="menu" class="sub-menu">
+                                            <li><a asp-area="Admin" asp-controller="Category" asp-action="Index">Категорії</a></li>
+                                            <li><a asp-area="Admin" asp-controller="Product" asp-action="Index">Товари</a></li>
+                                            @if (User.IsInRole(SD.Role_Employee) || User.IsInRole(SD.Role_Admin))
+                                            {
+                                                <li><a asp-area="Admin" asp-controller="User" asp-action="Index">Користувачі</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 search_form">
+                        @*<div class="search_box pull-right">
+                                <input type="text" placeholder="Search" />
+                            </div>*@
+                        <form asp-area="Customer" asp-controller="Home" asp-action="Index">
+                            <p>
+                                @*<input type="text" name="SearchString" />
+                                    <input type="submit" value="Пошук" />*@
+                                <input type="text" placeholder="Пошук" name="SearchString" class="mb-0" />
+                                <button class="btn btn-outline-secondary border-start-0 border rounded-pill ms-n3" type="submit">
+                                    <i class=" fa fa-search"></i>
+                                </button>
+                            </p>
+                            <!--<div class="col-sm-3">
+                                <div class="searchform">
+                                    <input type="text" placeholder="Пошук" name="SearchString" />
+                                    <button class="" type="submit">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>-->
+                            @*<div class="search_box pull-right">
+                                    <input type="text" placeholder="Search" name="SearchString" class="mb-5" />
+                                    <button type="submit" class="btn btn-primary">Пошук</button>
+                                </div>*@
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div><!--/header-bottom-->
+    </header><!--/header-->
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            <partial name="_Notifications">
+                @RenderBody()
+        </main>
+    </div>
+
+    <footer id="footer">
+
+        <div class="">
+            <div class="container">
+                <div class="row">
+                    
+                </div>
+            </div>
+        </div>
+
+            <div class="header_top">
+            <!--header_top-->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="contactinfo social-icons">
+                            <ul class="nav nav-pills">
+                                <li><a href="tel:+380976443016"><i class="fa fa-phone"></i> +38 097 644 30 16</a></li>
+                                <li><a href="tel:+380634370449"><i class="fa fa-phone"></i> +38 063 437 04 49</a></li>
+                                <li><a href="https://instagram.com/brand_yfn?igshid=vo3c7uzv2uze" target="_blank"><i class="fa fa-instagram"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="contactinfo social-icons pull-right">
+                            <ul class="nav nav-pills">
+                                <li><a href="https://goo.gl/maps/TqMvW5ubCA2PJgZs7" target="_blank"><i class="fa fa-map-marker"></i> Ірпінь, вул. Українська, 48а</a></li>
+                                <li><a href="mailto: Brand.yfn.shop@gmail.com" target="_blank"><i class="fa fa-envelope"></i> Brand.yfn.shop@gmail.com</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--/header_top-->
+
+        <div class="footer-bottom">
+            <div class="container text-center">
+                    <p class="">Copyright © 2021 Brand Y'fn. All rights reserved.</p>
+            </div>
+        </div>
+
+    </footer><!--/Footer-->
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
+    <script src="~/js/jquery.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+    <script src="~/js/price-range.js"></script>
+    <script src="~/js/jquery.prettyPhoto.js"></script>
+    <script src="~/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script type="~/text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://kit.fontawesome.com/e19c476714.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

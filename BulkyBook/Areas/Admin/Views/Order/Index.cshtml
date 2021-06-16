@@ -1,0 +1,89 @@
+﻿
+@{ Layout = "~/Views/Shared/_Layout.cshtml";
+
+                var status = Context.Request.Query["status"];
+
+                var pending = "text-primary";
+                var all = "text-primary";
+                var inprocess = "text-primary";
+                var completed = "text-primary";
+                var rejected = "text-primary";
+
+                switch (status)
+                {
+                    case "pending":
+                        pending = "active text-white";
+                        break;
+                    case "inprocess":
+                        inprocess = "active text-white";
+                        break;
+                    case "completed":
+                        completed = "active text-white";
+                        break;
+                    case "rejected":
+                        rejected = "active text-white";
+                        break;
+                    default:
+                        all = "active text-white";
+                        break;
+                } }
+
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+<br />
+<div class="border p-3">
+    <div class="d-flex justify-content-between mb-3">
+        <div class="p-2">
+            <h2 class="text-primary">Список замовлень </h2>
+        </div>
+        <div class="p-2">
+            <ul class="list-group list-group-horizontal-sm">
+                <a style="text-decoration:none;" asp-controller="Order"
+                   asp-action="Index" asp-route-status="inprocess">
+                    <li class="list-group-item @inprocess">В обробці</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="Order"
+                   asp-action="Index" asp-route-status="pending">
+                    <li class="list-group-item @pending">Очікується оплата</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="Order"
+                   asp-action="Index" asp-route-status="completed">
+                    <li class="list-group-item @completed">Завершено</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="Order"
+                   asp-action="Index" asp-route-status="rejected">
+                    <li class="list-group-item @rejected">Відхилено</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="Order"
+                   asp-action="Index" asp-route-status="all">
+                    <li class="list-group-item @all">Усі</li>
+                </a>
+            </ul>
+        </div>
+    </div>
+
+    <br /><br />
+
+    <table id="tblData" class="table table-striped table-bordered" style="width:100%">
+        <thead class="thead-dark">
+            <tr class="table-info">
+                <th>Номер замовлення</th>
+                <th>Ім'я та прізвище</th>
+                <th>Номер телефону</th>
+                <th>Спосіб доставки</th>
+                <th>Статус</th>
+                <th>Загальна ціна (грн)</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+
+</div>
+
+
+@section Scripts{
+
+    <script src="~/js/order.js"></script>
+}

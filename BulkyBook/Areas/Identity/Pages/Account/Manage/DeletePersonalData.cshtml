@@ -1,0 +1,33 @@
+﻿@page
+@model DeletePersonalDataModel
+@{
+    ViewData["Title"] = "Видалити особисті дані";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+<h4>@ViewData["Title"]</h4>
+
+<div class="alert alert-warning" role="alert">
+    <p>
+        <strong>Видалення цих даних назавжди видалить ваш обліковий запис, і відновити їх не вдасться.</strong>
+    </p>
+</div>
+
+<div>
+    <form id="delete-user" method="post" class="form-group">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        @if (Model.RequirePassword)
+        {
+            <div class="form-group">
+                <label asp-for="Input.Password">Пароль</label>
+                <input asp-for="Input.Password" class="form-control" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+        }
+        <button class="btn btn-danger" type="submit">Видалити дані та мій аккаунт <b>назавжди</b>.</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

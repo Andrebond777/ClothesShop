@@ -1,0 +1,24 @@
+﻿@page
+@model PersonalDataModel
+@{
+    ViewData["Title"] = "Видалення аккаунту";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+<h4>@ViewData["Title"]</h4>
+
+<div class="row">
+    <div class="col-md-6">
+        <p>Ваш обліковий запис містить особисті дані, які ви нам надали. Ця сторінка дозволяє видалbти ці дані.</p>
+        <p>
+            <strong>Видалення цих даних назавжди видалить ваш обліковий запис, і відновити їх не вдасться.</strong>
+        </p>
+        <p>
+            <a id="delete" asp-page="DeletePersonalData" class="btn btn-primary text-white">Видалити</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
