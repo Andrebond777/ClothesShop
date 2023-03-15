@@ -1,0 +1,300 @@
+﻿@model ClothesShop.Models.ViewModels.OrderDetailsVM
+@using ClothesShop.Utility
+@using Microsoft.Extensions.Options
+
+<form method="post">
+    <input hidden asp-for="OrderHeader.Id" />
+    <br />
+    <div class="backgroundWhite container">
+        <div class="card">
+            <div class="card-header bg-dark text-light ml-0 row container">
+                <div class="col-12 d-none d-md-block col-md-6 pb-1">
+                    <i class="fas fa-shopping-cart"></i> &nbsp; Деталі замовлення
+                </div>
+                <div class="col-12 col-md-4 offset-md-2 text-right">
+                    <a asp-area="Admin" asp-controller="Order" asp-action="Index" class="btn btn-outline-light form-control btn-sm">Назад</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="container rounded p-2">
+                    <div class="row">
+                        <div class="col-12 col-lg-7 pb-4 center-block">
+                            <div class="row">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3 center-block">
+                                    <span class="text-black">Деталі замовлення</span>
+                                </h4>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-4">Спосіб доставки</div>
+                                <div class="col-8">
+                                    @if (User.IsInRole(SD.Role_Employee) || User.IsInRole(SD.Role_Admin))
+                                    {
+                                        <input asp-for="OrderHeader.DeliveryMethod" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.DeliveryMethod" class="text-danger"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.DeliveryMethod" type="text" class="form-control" readonly />
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-4">Ім'я та прізвище</div>
+                                <div class="col-8">
+                                    @if (User.IsInRole(SD.Role_Employee) || User.IsInRole(SD.Role_Admin))
+                                    {
+                                        <input asp-for="OrderHeader.Name" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.Name" type="text" class="form-control" readonly />
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-4">Номер телефону</div>
+                                <div class="col-8">
+                                    @if (User.IsInRole(SD.Role_Employee) || User.IsInRole(SD.Role_Admin))
+                                    {
+                                        <input asp-for="OrderHeader.PhoneNumber" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.PhoneNumber" type="text" class="form-control" readonly />
+                                    }
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-4">Email</div>
+                                <div class="col-8">
+                                    @if (User.IsInRole(SD.Role_Employee) || User.IsInRole(SD.Role_Admin))
+                                    {
+                                        <input asp-for="OrderHeader.ApplicationUser.Email" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.ApplicationUser.Email" class="text-danger"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.ApplicationUser.Email" type="text" class="form-control" readonly />
+                                    }
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-4">Дата замовлення</div>
+                                <div class="col-8">
+
+                                    <input value="@Model.OrderHeader.OrderDate.ToShortDateString()" type="text" class="form-control" readonly />
+
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-4">Дата відправки</div>
+                                <div class="col-8">
+                                    <input value="@Model.OrderHeader.ShippingDate.ToShortDateString()"
+                                           id="shippingDate" type="text" readonly class="form-control" />
+                                </div>
+                            </div>
+                            
+                                @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                                {
+                                    <div class="pt-2">
+                                        <input type="submit" value="Редагувати деталі замовлення" class="btn btn-warning form-control"
+                                            formaction="/Admin/Order/UpdateOrderDetails" formmethod="post" />
+                                     </div>
+                                }
+                        </div>
+                        <div class="col-12 col-lg-4 offset-lg-4 pb-3">
+
+
+                            @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                            {
+                                <br />
+                                @if (Model.OrderHeader.OrderStatus == SD.StatusApproved)
+                                {
+                                    <a asp-action="StartProcessing" asp-route-id="@Model.OrderHeader.Id"
+                                       class="btn btn-success form-control">Прийняти замовлення</a>
+                                }
+                                @if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
+                                {
+                                    <input type="submit" value="Завершити" onclick="return validateInput()"
+                                           class="btn btn-success form-control"
+                                           formaction="/Admin/Order/ShipOrder" formmethod="post" />
+                                }
+                            }
+                            else
+                            {
+                                @*<label class="btn btn-primary form-control">@Model.OrderHeader.OrderStatus</label>*@
+                            }
+
+
+                            @if (Model.OrderHeader.OrderStatus != SD.StatusRefunded &&
+                           Model.OrderHeader.OrderStatus != SD.StatusCancelled &&
+                           (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee)))
+                            {
+                                <div class="pt-2">
+                                    <a asp-action="CancelOrder" asp-route-id="@Model.OrderHeader.Id"
+                                       class="btn btn-danger form-control">Скасувати замовлення</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="cart_items">
+            <div class="container">
+                <div class="table-responsive cart_info">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr class="cart_menu">
+                                <td class="image">Фото</td>
+                                <td class="description text-center">Назва</td>
+                                <td class="price text-center pr-4">Ціна</td>
+                                <td class="text-center">Кількість</td>
+                                <td class="text-center">Розмір</td>
+                                <td class="text-center">Колір</td>
+                                @*<td class="total">Всього</td>*@
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.OrderDetails.Count; i++)
+                            {
+
+                                @*<input hidden asp-for="@item.ProductId" />*@
+                                <tr class="">
+                                    <td class="cart_product">
+                                        <a asp-controller="Home" asp-action="Details" asp-route-id="@Model.OrderDetails[i].Product.Id" target="_blank">
+                                        @if (Model.OrderDetails[i].Product.ImagesUrl.Count() > 0)
+                                        {
+                                            <img src="@Model.OrderDetails[i].Product.ImagesUrl[0].Path" alt="Фото..." width="100">
+                                        }
+                                        </a>
+                                    </td>
+                                    <td class="cart_description text-center">
+                                        <a asp-controller="Home" asp-action="Details" asp-route-id="@Model.OrderDetails[i].Product.Id" target="_blank">@Model.OrderDetails[i].Product.Title</a>
+                                    </td>
+                                    <td class="cart_price">
+                                        @Model.OrderDetails[i].Product.Price грн
+                                    </td>
+                                    <td class="cart_quantity">
+                                        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                                        {
+                                            <div class="cart_quantity_button">
+                                                <a class="cart_quantity_down" asp-action="minus" asp-route-cartId="@Model.OrderDetails[i].Id"> - </a>
+                                                <input class="cart_quantity_input" type="text" name="quantity" value="@Model.OrderDetails[i].Count" autocomplete="off" size="2">
+                                                <a class="cart_quantity_up" asp-action="plus" asp-route-cartId="@Model.OrderDetails[i].Id"> + </a>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-black-50">@Model.OrderDetails[i].Count</p>
+                                        }
+                                    </td>
+                                    <td class="cart_select">
+                                        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                                        {
+                                            <select asp-for="@Model.OrderDetails[i].Size" class="col-11">
+                                                <option value="Виберіть розмір">Виберіть розмір</option>
+                                                @if (Model.OrderDetails[i].Product.Category.MainName == "Діти")
+                                                {
+                                                    <option value="104-110">104-110</option>
+                                                    <option value="116-122">116-122</option>
+                                                    <option value="128-134">128-134</option>
+                                                    <option value="140-146">140-146</option>
+                                                    <option value="152-158">152-158</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="XS">XS</option>
+                                                    <option value="S">S</option>
+                                                    <option value="M">M</option>
+                                                    <option value="L">L</option>
+                                                    <option value="XL">XL</option>
+                                                }
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-black-50">@Model.OrderDetails[i].Size</p>
+                                        }
+                                    </td>
+                                    <td class="cart_select">
+                                        @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                                        {
+                                            <select asp-for="@Model.OrderDetails[i].Color" class="col-11">
+                                                <option value="Виберіть колір">Виберіть колір</option>
+                                                @for (int j = 0; j < Model.OrderDetails[i].Product.Colors.Count(); j++)
+                                                {
+                                                    <option value="@Model.OrderDetails[i].Product.Colors[j].Name">@Model.OrderDetails[i].Product.Colors[j].Name</option>
+                                                }
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-black-50">@Model.OrderDetails[i].Color</p>
+                                        }
+                                    </td>
+
+                                    @*<td class="cart_total">
+                            <p class="cart_total_price"><b>@item.OneTypeTotal</b> грн</p>
+                        </td>*@
+                                    <td class="cart_delete">
+                                        <a class="cart_quantity_delete" asp-action="remove" asp-route-cartId="@Model.OrderDetails[i].Id"><i class="fa fa-times"></i></a>
+                                    </td>
+                                </tr>
+                                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section> <!--/#cart_items-->
+
+    
+
+</form>
+
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function validateInput() {
+            var tracking = document.getElementById("trackingNumber").value;
+            var carrier = document.getElementById("carrier").value;
+            if (tracking.toString() == '') {
+                swal("Error", "Please enter tracking number", "error")
+                return false;
+            }
+            else {
+                if (carrier.toString() == '') {
+                    swal("Error", "Please enter carrier", "error")
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+
+        $(document).ready(function () {
+            var shippingDate = document.getElementById("shippingDate");
+
+            if (shippingDate.value == '1/1/0001') {
+                shippingDate.value = "";
+            }
+
+            var paymentDate = document.getElementById("paymentDate");
+
+            if (paymentDate.value == '1/1/0001') {
+                paymentDate.value = "";
+            }
+
+        });
+    </script>
+
+}

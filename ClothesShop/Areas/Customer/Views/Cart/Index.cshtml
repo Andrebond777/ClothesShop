@@ -1,0 +1,134 @@
+﻿@model ClothesShop.Models.ViewModels.ShoppingCartVM
+
+
+@if (Model.ListCart.Count() > 0)
+{
+    <form method="post">
+    @*<input hidden asp-for="OrderHeader.Id" />*@
+        <section id="cart_items">
+            <div class="container">
+                <div class="table-responsive cart_info">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr class="cart_menu">
+                                <td class="image">Фото</td>
+                                <td class="description text-center">Назва</td>
+                                <td class="price text-center pr-4">Ціна</td>
+                                <td class="text-center">Кількість</td>
+                                <td class="text-center">Розмір</td>
+                                <td class="text-center">Колір</td>
+                                @*<td class="total">Всього</td>*@
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.ListCart.Count; i++)
+                            {
+
+                                @*<input hidden asp-for="@item.ProductId" />*@
+                                <tr class="">
+                                    <td class="cart_product">
+                                        <a asp-controller="Home" asp-action="Details" asp-route-id="@Model.ListCart[i].Product.Id" target="_blank">
+                                        @if (Model.ListCart[i].Product.ImagesUrl.Count() > 0)
+                                        {
+                                            <img src="@Model.ListCart[i].Product.ImagesUrl[0].Path" alt="Фото..." width="100">
+                                        }
+                                        </a>
+                                    </td>
+                                    <td class="cart_description text-center">
+                                        <a asp-controller="Home" asp-action="Details" asp-route-id="@Model.ListCart[i].Product.Id" target="_blank">@Model.ListCart[i].Product.Title</a>
+                                    </td>
+                                    <td class="cart_price">
+                                        @Model.ListCart[i].Product.Price грн
+                                    </td>
+                                    <td class="cart_quantity">
+                                        <div class="cart_quantity_button">
+                                            <a class="cart_quantity_down" asp-action="minus" asp-route-cartId="@Model.ListCart[i].Id"> - </a>
+                                            <input class="cart_quantity_input" type="text" name="quantity" value="@Model.ListCart[i].Count" autocomplete="off" size="2">
+                                            <a class="cart_quantity_up" asp-action="plus" asp-route-cartId="@Model.ListCart[i].Id"> + </a>
+                                        </div>
+                                    </td>
+                                    <td class="cart_select">
+                                        <select asp-for="@Model.ListCart[i].Size" class="col-11">
+                                            <option value="Виберіть розмір">Виберіть розмір</option>
+                                            @if (Model.ListCart[i].Product.Category.MainName == "Діти")
+                                            {
+                                                <option value="104-110">104-110</option>
+                                                <option value="116-122">116-122</option>
+                                                <option value="128-134">128-134</option>
+                                                <option value="140-146">140-146</option>
+                                                <option value="152-158">152-158</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="XS">XS</option>
+                                                <option value="S">S</option>
+                                                <option value="M">M</option>
+                                                <option value="L">L</option>
+                                                <option value="XL">XL</option>
+                                            }
+                                        </select>
+                                    </td>
+                                    <td class="cart_select">
+                                        <select asp-for="@Model.ListCart[i].Color" class="col-11">
+                                            <option value="Виберіть колір">Виберіть колір</option>
+                                            @for (int j = 0; j < Model.ListCart[i].Product.Colors.Count(); j++)
+                                            {
+                                                <option value="@Model.ListCart[i].Product.Colors[j].Name">@Model.ListCart[i].Product.Colors[j].Name</option>
+                                            }
+                                        </select>
+                                    </td>
+
+                                    @*<td class="cart_total">
+                            <p class="cart_total_price"><b>@item.OneTypeTotal</b> грн</p>
+                        </td>*@
+                                    <td class="cart_delete">
+                                        <a class="cart_quantity_delete" asp-action="remove" asp-route-cartId="@Model.ListCart[i].Id"><i class="fa fa-times"></i></a>
+                                    </td>
+                                </tr>
+                                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section> <!--/#cart_items-->
+
+        <section id="do_action">
+            <div class="container ">
+                @*<div class="heading">
+                        <h3>What would you like to do next?</h3>
+                        <p>Choose if you have a discount code or reward points you want to use or would like to estimate your delivery cost.</p>
+                    </div>*@
+                <div class="row pull-right col-sm-12">
+                    <div class="">
+                        <div class="total_area col-sm-12">
+                            <ul class="pull-left">
+                                <li>Всього: <b class="purple">@Model.OrderHeader.OrderTotal грн</b></li>
+                            </ul>
+
+
+
+                                @*<a class="btn btn-default check_out" asp-action="Summary">Продовжити</a>*@
+                                
+                                <button type="submit" class="btn btn-fefault cart pt-2 pl-4 pr-4 " @*value="Add to Cart"*@>
+                                    Продовжити
+                                </button>
+
+                                @*<a  class="btn btn-default check_out" asp-action="Clear" asp-route-listCart="@Model">Продовжити</a>*@
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!--/#do_action-->
+    </form>
+}
+else
+{
+    <div class="EmptyCart">
+        <img src="~/images/cart/EmptyCart.png" width="300" alt="Кошик покупок" />
+        <p><b>Кошик покупок порожній!</b></p>
+        <a class="btn btn-default btn-outline-secondary btn-sm" asp-area="Customer" asp-controller="Home" asp-action="Index">Продовжити</a>
+    </div>
+}

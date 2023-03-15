@@ -1,0 +1,343 @@
+﻿@model ClothesShop.Models.ViewModels.ShoppingCartVM
+@using Microsoft.Extensions.Options
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+
+<form method="post">
+    @*@Html.AntiForgeryToken()*@
+    <br />
+    <div class="backgroundWhiteBorder">
+        <div class="container">
+            <div class="card">
+                <div class="card-header bg-dark text-light ml-0 row container">
+                    <div class="col-6">
+                        <i class="fa fa-shopping-cart"></i> &nbsp;
+                        Підсумок Замовлення
+                    </div>
+                    <div class="col-6 text-right">
+                        <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="btn btn-outline-light btn-sm">Назад</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="container rounded p-2">
+                        <div class="row">
+                            <div class="col-12 col-lg-6 pb-2">
+                                <div class="row my-1">
+                                    <div class="col-12">
+                                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                            <span class="purple">Введіть контактні дані:</span>
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Ім'я та прізвище</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="OrderHeader.Name" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Номер телефону</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="OrderHeader.PhoneNumber" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label for="OrderHeader.DeliveryMethod">Спосіб доставки</label>
+                                    </div>
+                                    <div class="col-9">
+                                        @*<div class="form-group form-check">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" asp-for="OrderHeader.SelfPickup" />
+                                                    <span asp-validation-for="OrderHeader.SelfPickup" class="text-danger"></span>
+                                                </label>
+                                            </div>*@
+                                        <select name="OrderHeader.DeliveryMethod">
+                                            <option value="Самовивіз">Самовивіз: Київська обл., м. Ірпінь, вул. Українська, 48а</option>
+                                            <option value="Нова Пошта">Нова Пошта</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Адреса доставки</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="OrderHeader.StreetAddress" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                @*<div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Коментар до замовлення:</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="OrderHeader.Comment" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.Comment" class="text-danger"></span>
+                                    </div>
+                                </div>*@
+                                @*<div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Street Address</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.StreetAddress" type="text" class="form-control" />
+                                            <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>City</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input asp-for="OrderHeader.City" type="text" class="form-control" />
+                                            <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
+                                        </div>
+                                    </div>*@
+                            </div>
+                            <div class="col-12 col-lg-3 offset-lg-1">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="purple">Всього:</span>
+                                </h4>
+                                <ul class="list-group mb-3 pt-4">
+                                    @*@foreach (var details in Model.ListCart)
+                                        {
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <div>
+                                                    <h6 class="my-0">@details.Product.Title</h6>
+                                                    <small class="text-muted">Quantity: @details.Count</small>
+                                                </div>
+                                                <span class="text-muted">$@(details.Price * details.Count) </span>
+                                            </li>
+                                        }*@
+                                    <li class="list-group-item d-flex justify-content-center bg-light">
+                                        <h4 class="purple"><b>@(Model.OrderHeader.OrderTotal)</b> грн</h4>
+                                    </li>
+                                </ul>
+                                <button type="submit" value="Place Order" class="btn btn-dark form-control">Розмістити замовлення</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="card-footer">
+                    <div class="row">
+                        <div class="col-12 col-md-8 pt-2">-->
+                @*<p style="color:maroon; font-size:14px;">Estimate Arrival Date: @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()</p>*@
+                <!--</div>
+                <div class="col-12 col-md-4">-->
+                @*@{
+                        var OrderTotalForStripe = Model.OrderHeader.OrderTotal * 100;
+                    }*@
+                <!--<button type="submit" value="Place Order" class="btn btn-primary form-control">Розмістити замовлення</button>-->
+                @*<a asp-action="SummaryPost" class="btn btn-outline-info btn-sm">Proceed</a>*@
+                <!--</div>
+
+                    </div>
+                </div>-->
+                @*<div class="shopper-informations">
+                        <div class="row">
+                            <div class="col-sm-0">
+                                <div class="shopper-info">
+                                    <p>Shopper Information</p>
+                                    <form>
+                                        <input type="text" placeholder="Display Name">
+                                        <input type="text" placeholder="User Name">
+                                        <input type="password" placeholder="Password">
+                                        <input type="password" placeholder="Confirm password">
+                                    </form>
+                                    <a class="btn btn-primary" href="">Get Quotes</a>
+                                    <a class="btn btn-primary" href="">Continue</a>
+                                </div>
+                            </div>
+                            <div class="col-sm-5 clearfix">
+                                <div class="bill-to">
+                                    <p>Bill To</p>
+                                    <div class="form-one">
+                                        <form>
+                                            <input type="text" placeholder="Company Name">
+                                            <input type="text" placeholder="Email*">
+                                            <input type="text" placeholder="Title">
+                                            <input type="text" placeholder="First Name *">
+                                            <input type="text" placeholder="Middle Name">
+                                            <input type="text" placeholder="Last Name *">
+                                            <input type="text" placeholder="Address 1 *">
+                                            <input type="text" placeholder="Address 2">
+                                        </form>
+                                    </div>
+                                    <div class="form-two">
+                                        <form>
+                                            <input type="text" placeholder="Zip / Postal Code *">
+                                            <select>
+                                                <option>-- Country --</option>
+                                                <option>United States</option>
+                                                <option>Bangladesh</option>
+                                                <option>UK</option>
+                                                <option>India</option>
+                                                <option>Pakistan</option>
+                                                <option>Ucrane</option>
+                                                <option>Canada</option>
+                                                <option>Dubai</option>
+                                            </select>
+                                            <select>
+                                                <option>-- State / Province / Region --</option>
+                                                <option>United States</option>
+                                                <option>Bangladesh</option>
+                                                <option>UK</option>
+                                                <option>India</option>
+                                                <option>Pakistan</option>
+                                                <option>Ucrane</option>
+                                                <option>Canada</option>
+                                                <option>Dubai</option>
+                                            </select>
+                                            <input type="password" placeholder="Confirm password">
+                                            <input type="text" placeholder="Phone *">
+                                            <input type="text" placeholder="Mobile Phone">
+                                            <input type="text" placeholder="Fax">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="order-message">
+                                    <p>Shipping Order</p>
+                                    <textarea name="message"  placeholder="Notes about your order, Special Notes for Delivery" rows="16"></textarea>
+                                    <label><input type="checkbox"> Shipping to bill address</label>
+                                </div>
+                            </div>
+                            <section id="cart_items">
+                            <div class="col-sm-6 table-responsive cart_info container">
+                                                    <table class="table table-condensed">
+                                    <tbody>
+                                    @foreach (var item in Model.ListCart)
+                                    {
+                                        <tr>
+                                            <td class="cart_product">
+                                                <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Product.Id"><img src="@item.Product.ImagesUrl[0].Path" alt="Фото..." width="100"></a>
+                                            </td>
+                                            <td class="cart_description pull-right mb-2">
+                                                <h4><a asp-controller="Home" asp-action="Details" asp-route-id="@item.Product.Id">@item.Product.Title</a></h4>
+                                            </td>
+                                            <td class="cart_price">
+                                                <p>@item.Product.Price₴ x @item.Count</p>
+                                            </td>
+                                            <td class="cart_total">
+                                                <p class="cart_total_price">@item.OneTypeTotal₴</p>
+                                            </td>
+                                            <td class="cart_delete">
+                                                <a class="cart_quantity_delete" asp-action="remove" asp-route-cartId="@item.Id"><i class="fa fa-times"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                                </div>
+                                </section>
+                        </div>
+                    </div>*@
+
+            </div>
+        </div>
+    </div>
+    <div class="review-payment">
+        <h2><b>Товари в кошику</b></h2>
+    </div>
+    <section id="cart_items">
+            <div class="container">
+                <div class="table-responsive cart_info">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr class="cart_menu">
+                                <td class="image">Фото</td>
+                                <td class="description text-center">Назва</td>
+                                <td class="price text-center pr-4">Ціна</td>
+                                <td class="text-center">Кількість</td>
+                                <td class="text-center">Розмір</td>
+                                <td class="text-center">Колір</td>
+                                @*<td class="total">Всього</td>*@
+                                <td></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.ListCart.Count; i++)
+                            {
+
+                                @*<input hidden asp-for="@item.ProductId" />*@
+                            <tr class="">
+                                <td class="cart_product">
+                                    <a asp-controller="Home" asp-action="Details" asp-route-id="@Model.ListCart[i].Product.Id" target="_blank">
+                                        @if (Model.ListCart[i].Product.ImagesUrl.Count() > 0)
+                                        {
+                                            <img src="@Model.ListCart[i].Product.ImagesUrl[0].Path" alt="Фото..." width="100">
+                                        }
+                                    </a>
+                                </td>
+                                <td class="cart_description text-center">
+                                    <a asp-controller="Home" asp-action="Details" asp-route-id="@Model.ListCart[i].Product.Id" target="_blank">@Model.ListCart[i].Product.Title</a>
+                                </td>
+                                <td class="cart_price">
+                                    @Model.ListCart[i].Product.Price грн
+                                </td>
+                                <td class="cart_quantity">
+                                    <div class="cart_quantity_button">
+                                        <a class="cart_quantity_down" asp-action="minusSummary" asp-route-cartId="@Model.ListCart[i].Id"> - </a>
+                                        <input class="cart_quantity_input" type="text" name="quantity" value="@Model.ListCart[i].Count" autocomplete="off" size="2">
+                                        <a class="cart_quantity_up" asp-action="plusSummary" asp-route-cartId="@Model.ListCart[i].Id"> + </a>
+                                    </div>
+                                </td>
+                                <td class="cart_select">
+                                    <select asp-for="@Model.ListCart[i].Size" class="col-11">
+                                        <option value="Виберіть розмір">Виберіть розмір</option>
+                                        @if (Model.ListCart[i].Product.Category.MainName == "Діти")
+                                        {
+                                            <option value="104-110">104-110</option>
+                                            <option value="116-122">116-122</option>
+                                            <option value="128-134">128-134</option>
+                                            <option value="140-146">140-146</option>
+                                            <option value="152-158">152-158</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="XS">XS</option>
+                                            <option value="S">S</option>
+                                            <option value="M">M</option>
+                                            <option value="L">L</option>
+                                            <option value="XL">XL</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td class="cart_select">
+                                    <select asp-for="@Model.ListCart[i].Color" class="col-11">
+                                        <option value="Виберіть колір">Виберіть колір</option>
+                                        @for (int j = 0; j < Model.ListCart[i].Product.Colors.Count(); j++)
+                                        {
+                                            <option value="@Model.ListCart[i].Product.Colors[j].Name">@Model.ListCart[i].Product.Colors[j].Name</option>
+                                        }
+                                    </select>
+                                </td>
+
+                                @*<td class="cart_total">
+            <p class="cart_total_price"><b>@item.OneTypeTotal</b> грн</p>
+        </td>*@
+                                <td class="cart_delete">
+                                    <a class="cart_quantity_delete" asp-action="removeSummary" asp-route-cartId="@Model.ListCart[i].Id"><i class="fa fa-times"></i></a>
+                                </td>
+                            </tr>
+                                }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section> <!--/#cart_items-->
+</form>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

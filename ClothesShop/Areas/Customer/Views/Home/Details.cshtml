@@ -1,0 +1,135 @@
+﻿@model ClothesShop.Models.ShoppingCart
+
+<section>
+    <div class="container">
+        <div class="row">
+            <!--<div class="col-sm-3">
+            </div>-->
+
+            <div class="col-sm-12 padding-right">
+                <div class="product-details">
+                    <!--product-details-->
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
+
+                    <div class="col-sm-6">
+                        <div class="fotorama"
+                             data-nav="thumbs"
+                             data-shuffle="true"
+                             data-keyboard="true"
+                             data-autoplay="true"
+                             data-loop="true"
+                             data-width="100%">
+                            @if (Model.Product.ImagesUrl != null)
+                            {
+                                foreach (var url in Model.Product.ImagesUrl)
+                                {
+                <img src="@url.Path">}
+        }
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        <input hidden asp-for="ProductId" />
+                        <div class="col-sm-6">
+                            <div class="product-information">
+                                <!--/product-information-->
+                                <h2 class="pl-1">@Model.Product.Title</h2>
+                                <span class="pl-1">
+                                    <span><b>@Model.Product.Price</b> грн</span>
+                                </span>
+                                <br />
+                                <span>
+                                    <select asp-for="Color" class="col-10 ml-2 pull-left mb-2">
+                                        @if (@Model.Product.Colors.Count > 1)
+                                        {
+                                        <option value="Виберіть колір">Виберіть колір</option>
+                                        @for (int i = 0; i < @Model.Product.Colors.Count(); i++)
+                                            {
+                                        <option value="@Model.Product.Colors[i].Name">@Model.Product.Colors[i].Name</option>
+} }
+                                        else if (@Model.Product.Colors.Count == 1)
+                                        {
+                                        <option value="@Model.Product.Colors[0].Name">@Model.Product.Colors[0].Name</option>
+ }
+                        else
+                        {
+                                        <option value="Кольори відсутні">Кольори відсутні</option>
+}
+                                    </select>
+                                    <p></p>
+                                    <select asp-for="Size" class="col-10 ml-2 pull-left">
+                                        <option value="Виберіть розмір">Виберіть розмір</option>
+                                        @if (Model.Product.Category.MainName == "Діти")
+                                        {
+                                        <option value="104-110">104-110</option>
+                                        <option value="116-122">116-122</option>
+                                        <option value="128-134">128-134</option>
+                                        <option value="140-146">140-146</option>
+                                        <option value="152-158">152-158</option>
+ }
+                                                                                        else
+                                                                                        {
+                                        <option value="XS">XS</option>
+                                        <option value="S">S</option>
+                                        <option value="M">M</option>
+                                        <option value="L">L</option>
+                                        <option value="XL">XL</option>
+}
+                                    </select>
+
+                                    <br />
+                                    <br />
+                                    <br />
+
+                                    <div>
+                                        @if (Model.Product.Category.MainName == "Чоловіки")
+                                    {
+                                        <a class="text-black-50" target="_blank" href="~/images/sizeCharts/males.png">Розмірна сітка</a>
+                                    }
+                                    else if (Model.Product.Category.MainName == "Жінки")
+                                    {
+                                        <a class="text-black-50 pull-left pl-5" target="_blank" href="~/images/sizeCharts/females.png">Розмірна сітка</a>
+                                    }
+                                    else if (Model.Product.Category.MainName == "Діти")
+                                    {
+                                        <a class="text-black-50" target="_blank" href="~/images/sizeCharts/kids.png">Розмірна сітка</a>
+                                    }
+                                    else if (Model.Product.Category.MainName == "Піжами")
+                                    {
+                                        <a class="text-black-50" target="_blank" href="~/images/sizeCharts/pajamasAndUndershirts.png">Розмірна сітка</a>
+                                    }
+                                    </div>
+                                    <br />
+
+
+                                    <span class="pt-2 pl-2">
+                                        <input class="form-control-range pull-left" min="1" max="999" asp-for="Count" />
+
+                                        <span class="pl-3">
+                                            <button type="submit" class="btn btn-fefault cart pull-left" @*value="Add to Cart"*@>
+                                                <i class="fa fa-shopping-cart"></i>
+                                                Додати в кошик
+                                            </button>
+                                        </span>
+                                    </span>
+                                </span>
+                                @*<div class="col-12 col-md-6 pb-1">
+                                        <button type="submit" value="Add to Cart" class="btn btn-primary btn-square btn-lg form-control" style="height:50px;">Add to Cart</button>
+                                    </div>*@
+                                @*<p><b>Availability:</b> In Stock</p>
+                                    <p><b>Condition:</b> New</p>
+                                    <p><b>Brand:</b> E-SHOPPER</p>*@
+                                <br />
+                                <br />
+                                                            <br />
+                                <p><b>Опис:</b> @Html.Raw(Model.Product.Description)</p>
+                                <p><b>Склад:</b> @Html.Raw(Model.Product.Consist)</p>
+                                <p><b>Умови догляду:</b> @Html.Raw(Model.Product.CareConditions)</p>
+                            </div><!--/product-information-->
+                        </div>
+                    </form>
+                </div><!--/product-details-->
+            </div>
+        </div>
+    </div>
+</section>

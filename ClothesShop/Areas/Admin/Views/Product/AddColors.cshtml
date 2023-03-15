@@ -1,0 +1,38 @@
+﻿@model ClothesShop.Models.Product
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var title = "Додати кольори";
+}
+
+<div class="text-center">
+    <div class="border-bottom center-block pb-2">
+        <h2 class="">@title</h2>
+    </div>
+</div>
+
+<form method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="col-6 pt-4 center-block">
+        @for (int i = 0; i < Model.Colors.Count(); i++)
+        {
+            <div class="form-group row">
+                <div class="col-1">
+                    <label asp-for="Colors[i].Name">@(i+1))</label>
+                </div>
+                <div class="col-10">
+                    <input asp-for="Colors[i].Name" class="form-control" required/>
+                    <span asp-validation-for="Colors[i].Name" class="text-danger"></span>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-success form-control col-4">Додати товар</button>
+    </div>
+</form>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
